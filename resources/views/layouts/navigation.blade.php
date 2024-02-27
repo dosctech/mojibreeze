@@ -32,6 +32,12 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link>
+                    <a href="{{url('/dashboard')}}" class="navbar-brand">MojiVet</a>
+                   <li><a href="#home" class="smoothScroll">Home</a></li>
+                   <li><a href="#about" class="smoothScroll">About</a></li>
+                   <li><a href="#menu" class="smoothScroll">Photos</a></li>
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
@@ -49,4 +55,5 @@
             </div>
         </div>
     </div>
+    
 </nav>

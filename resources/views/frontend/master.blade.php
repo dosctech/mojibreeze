@@ -17,6 +17,7 @@
             margin: 0;
             padding: 0;
             height: 100%;
+            
         }
         body {
             display: flex;
@@ -65,6 +66,18 @@
             text-align: justify;
             margin-bottom: 20px;
         }
+        @media (max-width: 668px) {
+            .navbar-nav{
+                justify-content: center;
+            }
+        }
+
+        /* Media query for screens with a maximum width of 480 pixels (smartphones) */
+        @media (max-width: 480px) {
+            .navbar{
+                justify-content: center;
+            }
+        }
     </style>
     
 </head>
@@ -75,30 +88,18 @@
     <div class="spinner">
         <span class="spinner-rotate"></span>
     </div>
-</section>
+</section> 
 
 <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
-    <div class="container">
-
-         <div class="navbar-header">
-              <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                   <span class="icon icon-bar"></span>
-                   <span class="icon icon-bar"></span>
-                   <span class="icon icon-bar"></span>
-              </button>
-
-         </div>
+   
 
          <!-- MENU LINKS -->
-         <div class="collapse navbar-collapse">
-              <ul class="nav navbar-nav navbar-nav-first">
+         
+              <ul class="nav navbar-nav navbar-right">
                 <a href="{{url('/dashboard')}}" class="navbar-brand">MojiVet</a>
                    <li><a href="#home" class="smoothScroll">Home</a></li>
                    <li><a href="#about" class="smoothScroll">About</a></li>
                    <li><a href="#menu" class="smoothScroll">Photos</a></li>
-              
-
-              <ul class="nav navbar-nav navbar-right">
                    <li><a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a></li>
                    <div class="hidden sm:flex sm:items-center sm:ms-6">
                     <x-dropdown align="right" width="48">
