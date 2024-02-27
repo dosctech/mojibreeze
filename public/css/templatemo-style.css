@@ -1025,5 +1025,12 @@ footer .social-icon {
   .menu-thumb .menu-info {
     top: 60%;
   }
+  .custom-navbar .nav li a,
+  .top-nav-collapse .nav li a {
+    display: none;
+  }
+  .custom-navbar .section-btn {
+    display: none;
+  }
 }
 
