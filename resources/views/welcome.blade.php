@@ -22,7 +22,7 @@
             }
             .fixed-top-center {
             position: fixed;
-            top: 60%;
+            top: 70%;
             left: 18%;
             transform: translateX(-50%);
             display: flex;
@@ -48,12 +48,12 @@
             }
             section {
             margin-left: 50px; /* Adjust margin-left as needed */
-            margin-top: 12%;
+            margin-top: 10%;
 
             }
 
             p {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 text-align: left;
 
             }
