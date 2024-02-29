@@ -75,7 +75,7 @@
                 }
             }
 
-            @media only screen and (max-width: 1600px) {
+            @media only screen and (max-width: 1400px) {
                 body {
                     background-image: url('images/bgfront.jpg');
                     height: 960px;
