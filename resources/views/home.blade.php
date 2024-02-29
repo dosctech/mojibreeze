@@ -41,36 +41,39 @@
         }
     </style>
     <div class="container">
-        
         <a href="{{ route('create-appointment') }}" class="btn btn-yellow mb-3">Create Appointment</a>
-
+        <p>Total Appointments: {{ $appointments->count() }}</p> <!-- Display the count of appointments -->
         <div class="row">
             @foreach ($appointments as $appointment)
             <div class="col-lg-12 col-md-6 mb-5">
                 <div class="card h-100" style="border-radius: 15px; border: 2px solid rgba(97, 97, 97, 0.527);">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>{{ $appointment->name }}</b></h5>
-                            <p class="card-text"><b>Email:</b> {{ $appointment->email }} | 
-                                <b>Date:</b>  {{ $appointment->date }} | 
-                                    <b>Time:</b>  {{ $appointment->appointment_time }} | 
-                                        <b>Pet's Name:</b>  {{ $appointment->pet_name }} | 
-                                            <b> Pet's Type:</b>  {{ $appointment->pet_type }} | 
-                                                <b>Veterinarian:</b>  {{ $appointment->veterinarian }} |
-                                                    <b>Concern: </b> {{ $appointment->concern }} 
-                            </p>
-
-                            <p><strong> {{ $appointment->user_status}}</p></strong>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between align-items-center">
-                            <form action="{{ route('appointment.destroy', $appointment->id) }}" method="POST">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>{{ $appointment->name }}</b></h5>
+                        <p class="card-text"><b>Email:</b> {{ $appointment->email }} | 
+                            <b>Date:</b>  {{ $appointment->date }} | 
+                            <b>Time:</b> 
+                            @php
+                                $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
+                                $formattedTime = $appointmentTime->format('h:i A'); // Format time in 12-hour format with AM/PM
+                            @endphp
+                            {{ $formattedTime }}|
+                            <b>Pet's Name:</b>  {{ $appointment->pet_name }} | 
+                            <b> Pet's Type:</b>  {{ $appointment->pet_type }} | 
+                            <b>Veterinarian:</b>  {{ $appointment->veterinarian }} |
+                            <b>Concern: </b> {{ $appointment->concern }} 
+                        </p>
+                        <p><strong>{{ $appointment->user_status }}</strong></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <form action="{{ route('appointment.destroy', $appointment->id) }}" method="POST">
                             @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-gray">Cancel</button>
-                            </form>
-                            <a href="{{ route('appointment.edit', $appointment) }}" class="btn btn-green">Edit Appointment</a>
-                        </div>
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-gray">Cancel</button>
+                        </form>
+                        <a href="{{ route('appointment.edit', $appointment) }}" class="btn btn-green">Edit Appointment</a>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
     </div>

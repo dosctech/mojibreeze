@@ -44,7 +44,20 @@
 
                             <div class="form-group">
                                 <label for="appointment_time" class="font-weight-bold">Time</label>
-                                <input type="time" name="appointment_time" id="appointment_time" class="form-control" value="{{ old('appointment_time', $appointment->appointment_time) }}" required>
+                                <select name="appointment_time" id="appointment_time" class="form-control" value="{{ old('date', $appointment->time) }}"  required>
+                                    <option value="">Select Time</option>
+                                    @php
+                                        $startHour = 8; // Start hour (e.g., 8 AM)
+                                        $endHour = 17; // End hour (e.g., 5 PM)
+                                    @endphp
+                                    @for ($hour = $startHour; $hour <= $endHour; $hour++)
+                                        @php
+                                            $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
+                                            $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
+                                        @endphp
+                                        <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }}</option>
+                                    @endfor
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -66,9 +79,9 @@
                                 <label for="veterinarian" class="font-weight-bold">Veterinarian</label>
                                 <select name="veterinarian" id="veterinarian" class="form-control" required>
                                     <option value="">Select Veterinarian</option>
-                                    <option value="Dr. Tiger look" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Tiger look') ? 'selected' : '' }}>Dr. Tiger look</option>
-                                    <option value="Dr. Banana" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Banana') ? 'selected' : '' }}>Dr. Banana</option>
-                                    <option value="Dr. Dadz<" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Dadz') ? 'selected' : '' }}>Dr. Dadz</option>
+                                    <option value="Dr. Tiger look (Veterinary)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Tiger look') ? 'selected' : '' }}>Dr. Tiger look (Veterinary)</option>
+                                    <option value="Dr. Banana (Groomer)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Banana') ? 'selected' : '' }}>Dr. Banana (Groomer)</option>
+                                    <option value=">Dr. Dadz(Boldstar)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Dadz') ? 'selected' : '' }}>Dr. Dadz(Boldstar)</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>

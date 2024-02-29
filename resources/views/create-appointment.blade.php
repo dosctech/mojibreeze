@@ -15,6 +15,17 @@
     <div class="container">
         <div class="row justify-content-center">
                     <div class="card-body">
+                        @if(Session::has('error'))
+                                <div class="alert alert-danger">
+                                    {{ Session::get('error') }}
+                                </div>
+                            @endif
+
+                            @if(Session::has('success'))
+                                <div class="alert alert-success">
+                                    {{ Session::get('success') }}
+                                </div>
+                            @endif
                         <form method="POST" action="{{ route('appointments.store') }}">
                             @csrf
 
@@ -32,10 +43,22 @@
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" name="date" id="date" class="form-control" required>
                             </div>
-
                             <div class="form-group">
                                 <label for="appointment_time" class="font-weight-bold">Time</label>
-                                <input type="time" name="appointment_time" id="appointment_time" class="form-control" required>
+                                <select name="appointment_time" id="appointment_time" class="form-control" required>
+                                    <option value="">Select Time</option>
+                                    @php
+                                        $startHour = 8; // Start hour (e.g., 8 AM)
+                                        $endHour = 17; // End hour (e.g., 5 PM)
+                                    @endphp
+                                    @for ($hour = $startHour; $hour <= $endHour; $hour++)
+                                        @php
+                                            $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
+                                            $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
+                                        @endphp
+                                        <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }}</option>
+                                    @endfor
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -56,9 +79,9 @@
                                 <label for="veterinarian" class="font-weight-bold">Veterinarian</label>
                                 <select name="veterinarian" id="veterinarian" class="form-control" required>
                                     <option value="">Select Veterinarian</option>
-                                    <option value="vet1">Dr. Tiger Look</option>
-                                    <option value="vet2">Dr. Banana </option>
-                                    <option value="vet3">Dr. Dadz</option>
+                                    <option value="Dr. Tiger Look - Veterinary">Dr. Tiger Look - Veterinary</option>
+                                    <option value="Dr. Banana - Groomer">Dr. Banana - Groomer </option>
+                                    <option value="Dr. Dadz - Boldstar">Dr. Dadz - Boldstar</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>
@@ -67,7 +90,7 @@
                                 <label for="concern" class="font-weight-bold">Appointment Concern</label>
                                 <textarea name="concern" id="concern" class="form-control" required></textarea>
                             </div>
-
+                            
                             <button type="submit" class="btn btn-primary btn-block">Create Appointment</button>
                         </form>
                     </div>

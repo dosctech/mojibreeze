@@ -17,29 +17,36 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name' => 'required|string',
             'email' => 'required|email',
             'date' => 'required|date',
             'appointment_time' => 'required|date_format:H:i',
-            'pet_name' => 'required|string|max:255',
-            'pet_type' => 'required|string|max:255',
+            'pet_name' => 'required|string',
+            'pet_type' => 'required|string',
+            'veterinarian' => 'required|string',
             'concern' => 'required|string',
-            'veterinarian' => 'required|string|max:255',
         ]);
 
-        Appointment::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'date' => $request->date,
-            'appointment_time' => $request->appointment_time,
-            'pet_name' => $request->pet_name,
-            'pet_type' => $request->pet_type,
-            'concern' => $request->concern,
-            'veterinarian' => $request->veterinarian,
-        ]);
 
-        return redirect()->route('home')->with('success', 'Appointment created successfully!');
+        
+        // Check if the chosen date and time are available
+        $existingAppointment = Appointment::where('date', $validatedData['date'])
+            ->where('appointment_time', $validatedData['appointment_time'])
+            ->exists();
+
+        if ($existingAppointment) {
+            return back()->with('error', 'The selected date and time are not available. Please choose a different date and time.');
+        }
+
+        // Create a new appointment
+        Appointment::create($validatedData);
+
+        \Session::flash('success', 'Appointment created successfully.');
+
+    // Redirect back
+        return redirect()->route('appointments.index');
+    
     }
 
     public function index()

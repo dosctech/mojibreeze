@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
     <title>MojiVet</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
     <link rel="stylesheet" href="css/font-awesome.min.css">
      <link rel="stylesheet" href="css/animate.css">
      <link rel="stylesheet" href="css/owl.carousel.css">

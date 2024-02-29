@@ -53,6 +53,7 @@ Route::get('/show_post', [AdminController::class, 'show_post'])->middleware('aut
 Route::post('/admin/accept_post', [AdminController::class, 'accept_post'])->name('admin.accept_post');
 
 Route::post('/admin/reject_post', [AdminController::class, 'reject_post'])->name('admin.reject_post');
+Route::delete('/admin/delete', [AdminController::class, 'deleteAppointment'])->name('admin.delete_post');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,85 +1,123 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <!-- Hamburger Navigation -->
-            <div class="flex items-center">
-                <!-- Hamburger Icon -->
-                <button id="hamburger" class="block sm:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-                <!-- Appointment List -->
-                <ul class="hidden sm:flex space-x-4">
-                    <li><a href="{{ route('admin.show_post') }}" class="text-blue-500 hover:text-blue-700">Appointment List</a></li>
-                    <!-- Add more navigation links as needed -->
-                </ul>
-            </div>
-            <!-- Admin Section -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
 
-    <!-- Content Area -->
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <!-- Content Here -->
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
-
-<!-- CSS Styles -->
 <style>
-    /* Hamburger Styles */
-    #hamburger {
-        color: #4a5568;
-        cursor: pointer;
-    }
-    /* Admin Dropdown Position */
-    .sm\\:ms-6 {
-        margin-left: auto;
-    }
-</style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
 
-<script>
-    // Hamburger Functionality
-    document.getElementById('hamburger').addEventListener('click', function() {
-        document.querySelector('.hidden.sm\\:flex').classList.toggle('flex');
-    });
-</script>
+.dashboard-header {
+  background-color: #FBA834;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 130px;
+  right: 90px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 110px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #555;
+  color: #fff;
+  border: none;
+}
+.dropbtn{
+    padding: 15px;
+    border-radius: 10px;
+}
+.text-blue-500 {
+  color: #000000; /* Default color */
+  font-family: "Arial", sans-serif; /* Aesthetic font */
+  text-decoration: none; /* Remove text decoration */
+  font-size: 18px; /* Increase font size */
+  margin-left: 30px; /* Left margin */
+  margin-top: 300px;
+  transition: margin-left 0.5s; /* Add transition for margin-left */
+}
+
+.text-blue-500:hover {
+  color: #4b4b4b; /* Darker color on hover */
+  margin-top: 30px; /* Top margin on hover */
+  margin-left: 0; /* Slide to the left on hover */
+}
+.picture {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin: 20px;
+            width: 680px; /* Adjust width as needed */
+            height: 380px; /* Adjust height as needed */
+            z-index: -1;
+        }
+</style>
+</head>
+<body>
+
+<div class="dashboard-header">
+  <h1>Admin Dashboard</h1>
+</div>
+
+<div class="profile-dropdown">
+  <div class="dropdown">
+    <button class="dropbtn">Profile</button>
+    <div class="dropdown-content">
+      <a href="{{ route('profile.edit') }}">Edit Profile</a>
+      <form method="POST" action="{{ route('logout') }}">
+          @csrf
+          <x-dropdown-link :href="route('logout')"
+              onclick="event.preventDefault();
+              this.closest('form').submit();">
+              {{ __('Log Out') }}
+          </x-dropdown-link>
+      </form>
+    </div>
+  </div>
+</div>
+<a href="{{ route('admin.show_post') }}" class="text-blue-500 hover:text-blue-700">Appointment List</a>
+<div class="picture">
+    <img src="images/create.png" style="width: 700px; height: 400px;">
+</div>
+</body>
+</html>
