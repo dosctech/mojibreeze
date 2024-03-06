@@ -13,19 +13,27 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Hide horizontal scrollbar */
+  display: flex;
 }
 
-.dashboard-header {
-  background-color: #FBA834;
+.dashboard-sidebar {
+  background-color: #d1d1d1;
   color: #fff;
   padding: 20px;
-  text-align: center;
+  width: 250px; /* Adjust sidebar width as needed */
+  height: 100vh; /* Set sidebar height to 100% of the viewport height */
+  overflow-y: auto; /* Add vertical scroll if content exceeds sidebar height */
+}
+
+.dashboard-content {
+  padding: 20px;
+  flex-grow: 1;
 }
 
 .profile-dropdown {
   position: absolute;
-  top: 130px;
-  right: 90px;
+  top: 20px;
+  right: 20px;
 }
 
 .dropdown {
@@ -73,7 +81,7 @@ body {
   text-decoration: none; /* Remove text decoration */
   font-size: 18px; /* Increase font size */
   margin-left: 30px; /* Left margin */
-  margin-top: 300px;
+  margin-top: 30px;
   transition: margin-left 0.5s; /* Add transition for margin-left */
 }
 
@@ -91,33 +99,58 @@ body {
             height: 380px; /* Adjust height as needed */
             z-index: -1;
         }
+
+.dashboard-sidebar,
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-content {
+  align-items: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .dashboard-sidebar {
+    width: 100%; /* Set sidebar width to 100% on smaller screens */
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="dashboard-header">
-  <h1>Admin Dashboard</h1>
+<div class="dashboard-sidebar">
+  <img src="images/navigationlogo.png" style="width: 200px; height: auto;">
+  <a href="{{ route('admin.show_post') }}" class="text-blue-500 hover:text-blue-700">Appointment List</a>
 </div>
 
-<div class="profile-dropdown">
-  <div class="dropdown">
-    <button class="dropbtn">Profile</button>
-    <div class="dropdown-content">
-      <a href="{{ route('profile.edit') }}">Edit Profile</a>
-      <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <x-dropdown-link :href="route('logout')"
-              onclick="event.preventDefault();
-              this.closest('form').submit();">
-              {{ __('Log Out') }}
-          </x-dropdown-link>
-      </form>
+<div class="dashboard-content">
+  <div class="dashboard-header">
+
+  </div>
+
+  <!-- Content for the selected navigation will go here -->
+  <div class="picture">
+    <img src="images/create.png" style="width: 700px; height: 400px;">
+  </div>
+
+  <div class="profile-dropdown">
+    <div class="dropdown">
+      <button class="dropbtn">Profile</button>
+      <div class="dropdown-content">
+        <a href="{{ route('profile.edit') }}">Edit Profile</a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <x-dropdown-link :href="route('logout')"
+                onclick="event.preventDefault();
+                this.closest('form').submit();">
+                {{ __('Log Out') }}
+            </x-dropdown-link>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-<a href="{{ route('admin.show_post') }}" class="text-blue-500 hover:text-blue-700">Appointment List</a>
-<div class="picture">
-    <img src="images/create.png" style="width: 700px; height: 400px;">
-</div>
+
 </body>
 </html>

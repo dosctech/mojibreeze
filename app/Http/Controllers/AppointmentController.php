@@ -10,44 +10,43 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+    
     public function create()
     {
         return view('create-appointment');
     }
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'date' => 'required|date',
-            'appointment_time' => 'required|date_format:H:i',
-            'pet_name' => 'required|string',
-            'pet_type' => 'required|string',
-            'veterinarian' => 'required|string',
-            'concern' => 'required|string',
-        ]);
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email',
+        'date' => 'required|date',
+        'appointment_time' => 'required', // Remove the date_format validation rule
+        'pet_name' => 'required|string',
+        'pet_type' => 'required|string',
+        'veterinarian' => 'required|string',
+        'concern' => 'required|string',
+    ]);
 
+    // Check if the chosen date and time are available
+    $existingAppointment = Appointment::where('date', $validatedData['date'])
+        ->where('appointment_time', $validatedData['appointment_time'])
+        ->exists();
 
-        
-        // Check if the chosen date and time are available
-        $existingAppointment = Appointment::where('date', $validatedData['date'])
-            ->where('appointment_time', $validatedData['appointment_time'])
-            ->exists();
+    if ($existingAppointment) {
+        return back()->with('error', 'The selected date and time are not available. Please choose a different date and time.');
+    }
 
-        if ($existingAppointment) {
-            return back()->with('error', 'The selected date and time are not available. Please choose a different date and time.');
-        }
+    // Create a new appointment
+    Appointment::create($validatedData);
 
-        // Create a new appointment
-        Appointment::create($validatedData);
-
-        \Session::flash('success', 'Appointment created successfully.');
+    \Session::flash('success', 'Appointment created successfully.');
 
     // Redirect back
-        return redirect()->route('appointments.index');
-    
-    }
+    return redirect()->route('appointments.index');
+}
+
 
     public function index()
     {

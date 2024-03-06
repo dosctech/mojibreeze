@@ -11,7 +11,12 @@ class AdminController extends Controller
     public function show_post()
     {
         $appointments = Appointment::all();
-        return view ('admin.show_post',compact('appointments'));
+        $acceptedCount = $appointments->where('user_status', 'accepted')->count();
+        $rejectedCount = $appointments->where('user_status', 'rejected')->count();
+        return view('admin.show_post', compact('appointments', 'acceptedCount', 'rejectedCount'));
+
+
+        
     }
 
     public function accept_post(Request $request)
@@ -34,5 +39,5 @@ class AdminController extends Controller
 
         return redirect()->back()->with('message', 'Appointment rejected successfully.');
     }
-
+    
 }
