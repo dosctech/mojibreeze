@@ -8,6 +8,8 @@
     <title>@yield('title')</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
     <!-- Include custom CSS -->
     <style>
         /* Custom styles */

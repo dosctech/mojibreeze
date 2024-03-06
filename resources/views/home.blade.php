@@ -1,6 +1,7 @@
 @extends('appointment.app')
 
 @section('content')
+
     <style>
         .btn-yellow {
             background-color: #F3B95F;
@@ -48,6 +49,7 @@
             z-index: -1;
         }
     </style>
+    
     <div class="container">
         <a href="{{ route('create-appointment') }}" class="btn btn-yellow mb-3">Create Appointment</a>
         <p>Total Appointments: {{ $appointments->count() }}</p>
