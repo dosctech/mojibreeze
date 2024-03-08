@@ -46,15 +46,14 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::match(['post', 'delete'], 'admin/accept_post', [AdminController::class, 'accept_post'])->name('admin.accept_post');
 
+Route::get('/admin', [AdminController::class, 'admin'])->middleware('auth', 'admin')->name('admin.admin');
 
-Route::get('/admin', [AdminController::class, 'admin'])->middleware('auth','admin')->name('admin.admin');
-
-Route::get('/show_post', [AdminController::class, 'show_post'])->middleware('auth','admin')->name('admin.show_post');
-
-Route::post('/admin/accept_post', [AdminController::class, 'accept_post'])->name('admin.accept_post');
+Route::get('/show_post', [AdminController::class, 'show_post'])->middleware('auth', 'admin')->name('admin.show_post');
 
 Route::post('/admin/reject_post', [AdminController::class, 'reject_post'])->name('admin.reject_post');
+
 Route::delete('/admin/delete', [AdminController::class, 'deleteAppointment'])->name('admin.delete_post');
 
 Route::middleware('auth')->group(function () {

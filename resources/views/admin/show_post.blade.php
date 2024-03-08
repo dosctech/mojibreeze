@@ -401,6 +401,7 @@
 </div>
 
 <!-- Confirmation Modal -->
+<!-- Confirmation Modal -->
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
         <p id="confirmationMessage"></p>
@@ -418,29 +419,52 @@
     }
 
     function showConfirmation(action, appointmentId) {
-        var confirmationMessage = "Are you sure you want to delete this appointment?";
+        var confirmationMessage = "";
+
+        // Set appropriate confirmation message based on action
+        if (action === 'delete') {
+            confirmationMessage = "Are you sure you want to delete this appointment?";
+        } else if (action === 'accept') {
+            confirmationMessage = "Are you sure you want to accept this appointment?";
+        } else if (action === 'reject') {
+            confirmationMessage = "Are you sure you want to reject this appointment?";
+        }
+
         document.getElementById('confirmationMessage').innerText = confirmationMessage;
         document.getElementById('confirmationModal').style.display = "block";
 
+        // Set appropriate action for confirm button
         document.getElementById('confirmBtn').onclick = function() {
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = '{{ route("admin.delete_post") }}';
+
+            // Set action based on the action type
+            if (action === 'delete') {
+                form.action = '{{ route("admin.delete_post") }}';
+            } else if (action === 'accept') {
+                form.action = '{{ route("admin.accept_post") }}';
+            } else if (action === 'reject') {
+                form.action = '{{ route("admin.reject_post") }}';
+            }
+
             var csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = '{{ csrf_token() }}';
             form.appendChild(csrfToken);
+
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';
             methodInput.name = '_method';
             methodInput.value = 'DELETE';
             form.appendChild(methodInput);
+
             var appointmentIdInput = document.createElement('input');
             appointmentIdInput.type = 'hidden';
             appointmentIdInput.name = 'appointment_id';
             appointmentIdInput.value = appointmentId;
             form.appendChild(appointmentIdInput);
+
             document.body.appendChild(form);
             form.submit();
         };
@@ -450,6 +474,7 @@
         };
     }
 </script>
+
 
 
 
