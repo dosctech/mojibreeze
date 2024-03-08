@@ -7,9 +7,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // Import the Auth facade
 
 class AppointmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth'); // Apply auth middleware to all methods in this controller
+    }
     
     public function create()
     {
@@ -17,42 +22,37 @@ class AppointmentController extends Controller
     }
 
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'date' => 'required|date',
-        'appointment_time' => 'required', // Remove the date_format validation rule
-        'pet_name' => 'required|string',
-        'pet_type' => 'required|string',
-        'veterinarian' => 'required|string',
-        'concern' => 'required|string',
-    ]);
-
-    // Check if the chosen date and time are available
-    $existingAppointment = Appointment::where('date', $validatedData['date'])
-        ->where('appointment_time', $validatedData['appointment_time'])
-        ->exists();
-
-    if ($existingAppointment) {
-        return back()->with('error', 'The selected date and time are not available. Please choose a different date and time.');
-    }
-
-    // Create a new appointment
-    Appointment::create($validatedData);
-
-    \Session::flash('success', 'Appointment created successfully.');
-
-    // Redirect back
-    return redirect()->route('appointments.index');
-}
-
-
-    public function index()
     {
-        $appointments = Appointment::latest()->get();
-        return view('home', compact('appointments'));
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'date' => 'required|date',
+            'appointment_time' => 'required',
+            'pet_name' => 'required|string',
+            'pet_type' => 'required|string',
+            'veterinarian' => 'required|string',
+            'concern' => 'required|string',
+        ]);
+    
+        // Associate the appointment with the authenticated user
+        $validatedData['user_id'] = Auth::id();
+    
+        // Create a new appointment
+        Appointment::create($validatedData);
+    
+        \Session::flash('success', 'Appointment created successfully.');
+    
+        // Redirect back
+        return redirect()->route('appointments.index');
     }
+
+
+        public function index()
+        {
+            $user = Auth::user(); // Get the authenticated user
+            $appointments = $user->appointments()->latest()->get(); // Assuming appointments are related to users
+            return view('home', compact('appointments'));
+        }
 
    
 
