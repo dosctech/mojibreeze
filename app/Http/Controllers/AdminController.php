@@ -15,8 +15,6 @@ class AdminController extends Controller
         $rejectedCount = $appointments->where('user_status', 'rejected')->count();
         return view('admin.show_post', compact('appointments', 'acceptedCount', 'rejectedCount'));
 
-
-        
     }
 
     public function accept_post(Request $request)
@@ -39,5 +37,26 @@ class AdminController extends Controller
 
         return redirect()->back()->with('message', 'Appointment rejected successfully.');
     }
-    
+    public function admin()
+    {
+        $appointments = Appointment::all();
+        return view('admin.admin', compact('appointments'));
+
+    }
+    public function deleteAppointment(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+        ]);
+
+        // Find the appointment by ID
+        $appointment = Appointment::findOrFail($request->appointment_id);
+
+        // Delete the appointment
+        $appointment->delete();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Appointment deleted successfully.');
+    }
 }

@@ -21,6 +21,7 @@ Route::get('/', function () {
 });
 
 route::get('/home',[HomeController::class,'oo'])->middleware('auth')->name('home');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -47,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/admin', [AdminController::class, 'admin'])->middleware('auth','admin')->name('admin.admin');
 
 Route::get('/show_post', [AdminController::class, 'show_post'])->middleware('auth','admin')->name('admin.show_post');
 

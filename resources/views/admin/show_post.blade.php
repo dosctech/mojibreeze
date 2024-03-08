@@ -17,24 +17,25 @@
         .sidebar {
             position: fixed;
             top: 0;
-            left: -220px; /* Initially hidden */
+            left: 0; /* Initially open */
             height: 100%;
-            width: 200px;
-            background-color: #ffffff;
+            width: 220px;
+            background-color: #5858581a;
             color: #000000;
             padding: 20px;
             transition: left 0.3s ease; /* Smooth transition */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999; /* Ensure it's above other elements */
         }
 
         .sidebar.active {
-            left: 0;
-            /* Show sidebar */
+            left: -220px; /* Hide sidebar */
         }
 
-        .sidebar-header h2 {
-            margin-top: 60px;
-            margin-bottom: 20px;
+        .sidebar-header img {
+            width: 100px; /* Adjust image size as needed */
+            display: block;
+            margin: 0 auto; /* Center the image */
         }
 
         .sidebar-menu {
@@ -51,6 +52,9 @@
             text-decoration: none;
             color: #000000; /* Changed color to improve readability */
             font-size: 18px;
+            display: block;
+            padding: 10px 0;
+            text-align: center;
         }
 
         /* Main Content Styles */
@@ -60,8 +64,8 @@
             margin-left: 0; /* Adjusted margin-left */
         }
 
-        .container.active {
-            margin-left: 200px; /* Adjusted margin-left when sidebar is active */
+        .container.move-right {
+            margin-left: 0; /* Adjusted margin-left when sidebar is closed */
         }
 
         .header {
@@ -79,16 +83,19 @@
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
-            /* margin-left: 190px; */ /* Removed fixed margin-left */
         }
 
         .card-body {
             padding: 20px;
         }
+        .container.move-right {
+            margin-left:-220px; /* Adjusted margin-right when sidebar is closed */
+        }
 
         .appointment-details {
             display: flex;
             flex-wrap: wrap;
+            margin-left: 252px;
         }
 
         .detail-pair {
@@ -103,6 +110,7 @@
 
         .data {
             margin-bottom: 5px;
+            margin-right: -10px;
         }
 
         .card-footer {
@@ -125,19 +133,55 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 10px;
-            width: 120px;
+            margin: 5px;
+            width: 90px;
             outline: none;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-left: 250px;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px;
+            border-bottom: 1px solid #808080;
+            
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            
+        }
+
+        .table tbody tr:hover {
+            background-color: #f5f5f5;
+            
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
         .btn-success {
             background-color: #4CAF50;
-            color: #fff;
+            color: white;
         }
 
         .btn-danger {
             background-color: #f44336;
-            color: #fff;
+            color: white;
+        }
+
+        .btn-container {
+            display: flex;
         }
 
         .btn:hover {
@@ -176,32 +220,6 @@
             margin: 0 10px;
         }
 
-        /* Statistics Container Styles */
-        .stats-container {
-            margin-left: 34%;
-            text-align: center;
-            margin-top: 250px; /* Adjusted for top margin */
-            padding: 20px;
-            position: fixed;
-        }
-
-        .stats-item {
-            display: inline-block;
-            margin: 0 20px;
-        }
-
-        .stats-item h3 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .stats-item p {
-            margin: 5px 0 0;
-            font-size: 16px;
-            color: #666;
-        }
-
         /* Hamburger Menu Styles */
         .hamburger {
             position: fixed;
@@ -231,6 +249,46 @@
         .hamburger.active div:last-child {
             transform: rotate(45deg) translate(-9px, -6px);
         }
+
+        .profile-dropdown {
+            margin-left: 70px;
+            top: 20px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-top:190px;
+            margin-left: -50px;
+        }
+
+        
+
+        .dropdown-content a {
+            color: #000000;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+        }
+        .dropbtn{
+            padding: 15px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -243,90 +301,13 @@
 
 <div class="sidebar">
     <div class="sidebar-header">
-        <h2>Menu</h2>
+        <img src="images/favicon.ico">
     </div>
     <ul class="sidebar-menu">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Appointments</a></li>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/show_post">Appointments</a></li>
     </ul>
     
-</div>
-
-<div class="container">
-    <h1 class="header">Appointment Details</h1>
-    <p class="total-appointments">Total Appointments: {{ $appointments->count() }}</p>
-    <div class="appointment-container">
-        @foreach ($appointments as $appointment)
-            <div class="appointment-card">
-                <div class="card-body">
-                    <div class="appointment-details">
-                        <!-- Appointment details -->
-                        <div class="detail-pair">
-                            <div class="title"><strong>Name</strong></div>
-                            <div class="data">{{ $appointment->name }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Email</strong></div>
-                            <div class="data">{{ $appointment->email }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Date</strong></div>
-                            <div class="data">{{ $appointment->date }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Time</strong></div>
-                            <div class="data">{{ $appointment->appointment_time }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Pet's Name</strong></div>
-                            <div class="data">{{ $appointment->pet_name }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Pet's Type</strong></div>
-                            <div class="data">{{ $appointment->pet_type }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Veterinarian</strong></div>
-                            <div class="data">{{ $appointment->veterinarian }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Concern</strong></div>
-                            <div class="data">{{ $appointment->concern }}</div>
-                        </div>
-                        <div class="detail-pair">
-                            <div class="title"><strong>Status</strong></div>
-                            <div class="data">{{ $appointment->user_status}}</div>
-                        </div>
-                   
-                    
-                        <!-- Accept and Reject buttons -->
-                        <div class="btn-container">
-                            <form id="acceptForm_{{ $appointment->id }}" action="{{ route('admin.accept_post') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                                <button type="button" onclick="showConfirmation('accept', {{ $appointment->id }})" class="btn btn-success">Accept</button>
-                            </form>
-                            <form id="rejectForm_{{ $appointment->id }}" action="{{ route('admin.reject_post') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                                <button type="button" onclick="showConfirmation('reject', {{ $appointment->id }})" class="btn btn-danger">Reject</button>
-                            </form>
-                        </div>
-                        
-                        <div id="confirmationModal" class="modal">
-                            <div class="modal-content">
-                                <p id="confirmationMessage"></p>
-                                <div class="modal-buttons">
-                                    <button id="confirmBtn" class="btn btn-success">Confirm</button>
-                                    <button id="cancelBtn" class="btn btn-danger">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
     <div class="stats-container">
         <div class="stats-item">
             <h3>Number of Accepted</h3>
@@ -337,26 +318,131 @@
             <p><?php echo $rejectedCount; ?></p>
         </div>
     </div>
+    <div class="profile-dropdown">
+        <div class="dropdown">
+            <div class="dropdown-content">
+                <a href="{{ route('profile.edit') }}">Edit Profile</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-dropdown-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<h1 class="header">Appointment Details</h1>
+    <p class="total-appointments">Total Appointments: {{ $appointments->count() }}</p>
+<div class="container">
+    
+    <div class="appointment-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date & Time</th>
+                    <th>Pet's Details</th>
+                    <th>Veterinarian</th>
+                    <th>Concern</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($appointments as $appointment)
+                    <tr>
+                        <td>{{ $appointment->name }}</td>
+                        <td>{{ $appointment->email }}</td>
+                        <td>{{ $appointment->date }}<br>
+                            @php
+                                $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
+                                $formattedStartTime = $appointmentTime->format('h:i'); // Format start time (e.g., 8:00)
+                                $formattedEndTime = $appointmentTime->copy()->addHour()->format('h:i A'); // Add an hour and format end time with AM/PM
+                            @endphp
+                            {{ $formattedStartTime }} - {{ $formattedEndTime }}</p>
+                        <td>
+                            <strong>Name:</strong> {{ $appointment->pet_name }}<br>
+                            <strong>Type:</strong> {{ $appointment->pet_type }}
+                        </td>
+                        <td>{{ $appointment->veterinarian }}</td>
+                        <td>{{ $appointment->concern }}</td>
+                        <td>{{ $appointment->user_status}}</td>
+                        <td>
+                            @if($appointment->user_status !== 'accepted' && $appointment->user_status !== 'rejected')
+                                <form id="acceptForm_{{ $appointment->id }}" action="{{ route('admin.accept_post') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                                    <button type="button" onclick="showConfirmation('accept', {{ $appointment->id }})" class="btn btn-success">Accept</button>
+                                </form>
+                                <form id="rejectForm_{{ $appointment->id }}" action="{{ route('admin.reject_post') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                                    <button type="button" onclick="showConfirmation('reject', {{ $appointment->id }})" class="btn btn-danger">Reject</button>
+                                </form>
+                                
+                            @endif
+                        </td>
+                        <td>
+                            <form id="deleteForm_{{ $appointment->id }}" action="{{ route('admin.delete_post') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                                <button type="button" onclick="showConfirmation('delete', {{ $appointment->id }})" class="btn" style="background-color: #494949; color: white; padding: 6px 12px; border: none; cursor: pointer; border-radius: 4px;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <p id="confirmationMessage"></p>
+        <div class="modal-buttons">
+            <button id="confirmBtn" class="btn btn-success">Confirm</button>
+            <button id="cancelBtn" class="btn btn-danger">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script>
     function toggleSidebar() {
         document.querySelector('.sidebar').classList.toggle('active');
-        document.querySelector('.container').classList.toggle('active');
+        document.querySelector('.container').classList.toggle('move-right');
     }
-</script>
-<script>
+
     function showConfirmation(action, appointmentId) {
-        var confirmationMessage = "Are you sure you want to " + action + " this appointment?";
+        var confirmationMessage = "Are you sure you want to delete this appointment?";
         document.getElementById('confirmationMessage').innerText = confirmationMessage;
         document.getElementById('confirmationModal').style.display = "block";
 
         document.getElementById('confirmBtn').onclick = function() {
-            if (action === 'accept') {
-                document.getElementById('acceptForm_' + appointmentId).submit();
-            } else if (action === 'reject') {
-                document.getElementById('rejectForm_' + appointmentId).submit();
-            }
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("admin.delete_post") }}';
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            form.appendChild(csrfToken);
+            var methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            form.appendChild(methodInput);
+            var appointmentIdInput = document.createElement('input');
+            appointmentIdInput.type = 'hidden';
+            appointmentIdInput.name = 'appointment_id';
+            appointmentIdInput.value = appointmentId;
+            form.appendChild(appointmentIdInput);
+            document.body.appendChild(form);
+            form.submit();
         };
 
         document.getElementById('cancelBtn').onclick = function() {
@@ -364,5 +450,8 @@
         };
     }
 </script>
+
+
+
 </body>
 </html>
