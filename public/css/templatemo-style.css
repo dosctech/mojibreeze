@@ -214,38 +214,27 @@ section {
   color: #000000;
   border: none;
   margin-bottom: 0;
-  padding: 0px 0;
-  display: flex; /* Make it flex container */
-  justify-content: center; /* Align items to the left */
- 
-}
-
-.custom-navbar .navbar-nav {
-  display: flex; /* Make nav items flex container */
-  list-style: none; /* Remove default list styles */
-}
-
-.custom-navbar .navbar-nav li {
-  margin-right: 40px; /* Add space between nav items */
-}
-
-.custom-navbar .navbar-nav li:last-child {
-  margin-right: 0; /* Remove margin for the last nav item */
+  padding: 25px 0;
 }
 
 .custom-navbar .navbar-brand {
   color: #000000;
   font-size: 18px;
   font-weight: bold;
-  margin-right: 200px;
 }
 
 .custom-navbar .navbar-brand span {
-  color: #000000;
+  color: #ce3232;
 }
 
 .top-nav-collapse {
   background: #ffffff;
+}
+
+/* Updated CSS to make navigation horizontal */
+.custom-navbar .navbar-nav {
+  display: flex;
+  align-items: center; /* Optional: Align items vertically */
 }
 
 .custom-navbar .navbar-nav.navbar-nav-first {
@@ -280,7 +269,6 @@ section {
 }
 
 .custom-navbar .nav li a {
-  
   font-size: 12px;
   font-weight: bold;
   color: #000000;
@@ -317,6 +305,7 @@ section {
   background: #252525;
   border-color: transparent;
 }
+
 
 @media(max-width:768px) {
   .custom-navbar {
