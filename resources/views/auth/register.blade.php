@@ -17,13 +17,16 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div class="mt-4 relative">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            <div class="relative">
+                <x-text-input id="password" class="block pr-10 mt-1 w-full"
+                                type="password"
+                                name="password"
+                                required autocomplete="new-password" />
+                                <div class="text-gray-500 cursor-pointer toggle-password"style="margin-top: 5px;">Show Password</div>
+                
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -35,7 +38,7 @@
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
                             type="password"
                             name="password_confirmation" required autocomplete="new-password" />
-
+                            <div class="text-gray-500 cursor-pointer toggle-password"style="margin-top: 5px;">Show Password</div>
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
@@ -49,4 +52,18 @@
             </x-primary-button>
         </div>
     </form>
+
+    <!-- Script to Toggle Password Visibility -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordInput = document.getElementById('password');
+
+            togglePassword.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.textContent = type === 'password' ? 'Show Password' : 'Hide Password';
+            });
+        });
+    </script>
 </x-guest-layout>
