@@ -55,6 +55,27 @@
             width: calc(16.66% - 30px);
             margin: 15px;
         }
+        .navbar-nav {
+        color: black; /* Change text color to black */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center horizontally */
+        margin-top: 15px; /* Add space between navbar and centered items */
+    }
+
+    .navbar-nav li {
+        margin-right: 15px; /* Adjust as needed */
+    }
+
+    .navbar-nav li:last-child {
+        margin-right: 0; /* Remove margin from the last item */
+    }
+
+    .navbar-nav li a {
+        color: black; /* Change text color to black */
+        font-weight: bold; /* Adjust font weight */
+        text-transform: uppercase; /* Convert text to uppercase */
+    }
         .section {
             margin-bottom: 30px;
         }
@@ -100,6 +121,7 @@
         @media (max-width: 668px) {
             .navbar-nav{
                 justify-content: center;
+                
             }
         }
 

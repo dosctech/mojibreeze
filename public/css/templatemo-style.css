@@ -318,10 +318,11 @@ section {
   border-color: transparent;
 }
 
-@media(min-width:768px) {
+@media(max-width:768px) {
   .custom-navbar {
     border-bottom: 0;
     background: 0 0; 
+    display: none;
   }
 
   .custom-navbar.top-nav-collapse {
