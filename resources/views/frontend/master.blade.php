@@ -12,6 +12,7 @@
      <link rel="stylesheet" href="css/magnific-popup.css">
 
      <!-- MAIN CSS -->
+     <link rel="stylesheet" href="css/templatemo-style.css">
      <style>
         /* Centering items */
         body, html {
