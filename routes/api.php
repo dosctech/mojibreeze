@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\API\UserController;
 
 
 /*
@@ -21,3 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('appointments', ApiController::class);
+
+Route::prefix('v1')->group(function () {
+    Route::apiResource('users', UserController::class);
+});

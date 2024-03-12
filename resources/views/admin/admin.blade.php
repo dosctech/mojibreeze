@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Details Dashboard</title>
+    <title>Appointment Dashboard</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-vDI5s5G81h3RmAeXImK6RlhrKmJ/CcHRJHpnoIOIblzkRJ64EQJsrdU9yvONgMpJZB07L4p+Lrh+o72byuWdMw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Global Styles */
@@ -83,6 +85,8 @@
         .dashboard-container {
             display: flex;
             flex-wrap: wrap;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+            margin-top: 200px;
             gap: 30px;
             justify-content: center;
         }
@@ -139,44 +143,44 @@
             transform: rotate(45deg) translate(-9px, -6px);
         }
         .profile-dropdown {
-    position: fixed;
-    bottom: 20px; /* Adjust the bottom position as needed */
-    left: 20px;
-    z-index: 9999; /* Ensure it's above other elements */
-}
+            margin-left: 70px;
+            top: 20px;
+        }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-top:590px;
+            margin-left: -50px;
+        }
 
+        
 
+        .dropdown-content a {
+            color: #000000;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            
+        }
 
-.dropdown-content a {
-    color: #333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
 
-.dropdown-content a:hover {
-    background-color: #ddd;
-}
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #555;
-    color: #fff;
-    border: none;
-}
-
-.dropbtn {
-    padding: 15px;
-    border-radius: 10px;
-}
+        .dropdown:hover .dropbtn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+        }
+        .dropbtn{
+            padding: 15px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -195,29 +199,28 @@
         <li><a href="/admin">Dashboard</a></li>
         <li><a href="/show_post">Appointments</a></li>
     </ul>
-
+    
     <div class="profile-dropdown">
-      <div class="dropdown">
-        
-        <div class="dropdown-content">
-          <a href="{{ route('profile.edit') }}">Edit Profile</a>
-          <form method="POST" action="{{ route('logout') }}">
-              @csrf
-              <x-dropdown-link :href="route('logout')"
-                  onclick="event.preventDefault();
-                  this.closest('form').submit();">
-                  {{ __('Log Out') }}
-              </x-dropdown-link>
-          </form>
+        <div class="dropdown">
+            <div class="dropdown-content">
+               
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-dropdown-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 
 <div class="container active"> <!-- Ensure container is active by default -->
     <div class="header">
         <h1>Appointment Details Dashboard</h1>
-        <p>Welcome, User</p>
+        <p>Welcome, Admin</p>
     </div>
 
     <div class="dashboard-container">
@@ -229,7 +232,6 @@
               <h1 class="total-appointments">{{ $appointments->count() }}</h1>
             </div>
             <div class="card-footer">
-                <a href="/show_post" class="btn btn-success">View All</a>
             </div>
         </div>
 
@@ -238,12 +240,13 @@
                 <h2>Upcoming Appointments</h2>
             </div>
             <div class="card-body">
-                <p>No upcoming appointments</p>
+                <h1 class="total-appointments">{{ $appointments->count() }}</h1>
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-success">Schedule Appointment</a>
+                <a href="/show_post"  class="btn btn-success">Schedule Appointment</a>
             </div>
         </div>
+        
     </div>
 </div>
 

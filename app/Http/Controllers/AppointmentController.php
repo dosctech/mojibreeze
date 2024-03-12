@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Import the Auth facade
@@ -65,10 +66,19 @@ class AppointmentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $appointment = Appointment::find($id);
-        $appointment->update($request->all());
+        $appointment = Appointment::findOrFail($id);
+        
+        // Validate the request
+        $request->validate([
+            'user_status' => 'required|in:accepted,rejected,canceled', // Only accept these values
+        ]);
 
-        return redirect('/appointment')->with('message', 'Student data updated');
+        // Update the user status
+        $appointment->update([
+            'user_status' => $request->user_status,
+        ]);
+
+        return redirect()->back()->with('status', 'Appointment status updated successfully.');
     }
 
     public function destroy($id)
@@ -76,6 +86,7 @@ class AppointmentController extends Controller
         Appointment::destroy($id);
         return redirect()->route('home')->with('success', 'Appointment deleted successfully.');
     }
+    
 }
 
 

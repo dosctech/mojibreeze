@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     public function show_post()
-    {
-        $appointments = Appointment::all();
-        $acceptedCount = $appointments->where('user_status', 'accepted')->count();
-        $rejectedCount = $appointments->where('user_status', 'rejected')->count();
-        return view('admin.show_post', compact('appointments', 'acceptedCount', 'rejectedCount'));
+{
+    $appointments = Appointment::all();
+    $acceptedCount = $appointments->where('user_status', 'accepted')->count();
+    $rejectedCount = $appointments->where('user_status', 'rejected')->count();
+    $canceledCount = $appointments->where('user_status', 'canceled')->count();
 
-    }
+    return view('admin.show_post', compact('appointments', 'acceptedCount', 'rejectedCount', 'canceledCount'));
+}
+
 
     public function accept_post(Request $request)
     {
@@ -59,4 +61,5 @@ class AdminController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Appointment deleted successfully.');
     }
+   
 }

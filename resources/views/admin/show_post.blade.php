@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Details</title>
+        <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
     <style>
         /* Global Styles */
         body {
@@ -311,17 +313,22 @@
     <div class="stats-container">
         <div class="stats-item">
             <h3>Number of Accepted</h3>
-            <p><?php echo $acceptedCount; ?></p>
+            <p>{{ $acceptedCount }}</p>
         </div>
         <div class="stats-item">
             <h3>Number of Rejected</h3>
-            <p><?php echo $rejectedCount; ?></p>
+            <p>{{ $rejectedCount }}</p>
+        </div>
+        <div class="stats-item">
+            <h3>Number of Canceled</h3>
+            <p>{{ $canceledCount }}</p>
         </div>
     </div>
+    
     <div class="profile-dropdown">
         <div class="dropdown">
             <div class="dropdown-content">
-                <a href="{{ route('profile.edit') }}">Edit Profile</a>
+                
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-dropdown-link :href="route('logout')"
@@ -336,71 +343,71 @@
 </div>
 <h1 class="header">Appointment Details</h1>
     <p class="total-appointments">Total Appointments: {{ $appointments->count() }}</p>
-<div class="container">
+    <div class="container">
     
-    <div class="appointment-container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Date & Time</th>
-                    <th>Pet's Details</th>
-                    <th>Veterinarian</th>
-                    <th>Concern</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($appointments as $appointment)
+        <div class="appointment-container">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{ $appointment->name }}</td>
-                        <td>{{ $appointment->email }}</td>
-                        <td>{{ $appointment->date }}<br>
-                            @php
-                                $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
-                                $formattedStartTime = $appointmentTime->format('h:i'); // Format start time (e.g., 8:00)
-                                $formattedEndTime = $appointmentTime->copy()->addHour()->format('h:i A'); // Add an hour and format end time with AM/PM
-                            @endphp
-                            {{ $formattedStartTime }} - {{ $formattedEndTime }}</p>
-                        <td>
-                            <strong>Name:</strong> {{ $appointment->pet_name }}<br>
-                            <strong>Type:</strong> {{ $appointment->pet_type }}
-                        </td>
-                        <td>{{ $appointment->veterinarian }}</td>
-                        <td>{{ $appointment->concern }}</td>
-                        <td>{{ $appointment->user_status}}</td>
-                        <td>
-                            @if($appointment->user_status !== 'accepted' && $appointment->user_status !== 'rejected')
-                                <form id="acceptForm_{{ $appointment->id }}" action="{{ route('admin.accept_post') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                                    <button type="button" onclick="showConfirmation('accept', {{ $appointment->id }})" class="btn btn-success">Accept</button>
-                                </form>
-                                <form id="rejectForm_{{ $appointment->id }}" action="{{ route('admin.reject_post') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                                    <button type="button" onclick="showConfirmation('reject', {{ $appointment->id }})" class="btn btn-danger">Reject</button>
-                                </form>
-                                
-                            @endif
-                        </td>
-                        <td>
-                            <form id="deleteForm_{{ $appointment->id }}" action="{{ route('admin.delete_post') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
-                                <button type="button" onclick="showConfirmation('delete', {{ $appointment->id }})" class="btn" style="background-color: #494949; color: white; padding: 6px 12px; border: none; cursor: pointer; border-radius: 4px;">Delete</button>
-                            </form>
-                        </td>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date & Time</th>
+                        <th>Pet's Details</th>
+                        <th>Veterinarian</th>
+                        <th>Concern</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($appointments as $appointment)
+                        <tr>
+                            <td>{{ $appointment->user_id }}</td>
+                            <td>{{ $appointment->name }}</td>
+                            <td>{{ $appointment->email }}</td>
+                            <td>{{ $appointment->date }}<br>
+                                @php
+                                    $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
+                                    $formattedStartTime = $appointmentTime->format('h:i'); // Format start time (e.g., 8:00)
+                                    $formattedEndTime = $appointmentTime->copy()->addHour()->format('h:i A'); // Add an hour and format end time with AM/PM
+                                @endphp
+                                {{ $formattedStartTime }} - {{ $formattedEndTime }}</td>
+                            <td>
+                                <strong>Name:</strong> {{ $appointment->pet_name }}<br>
+                                <strong>Type:</strong> {{ $appointment->pet_type }}
+                            </td>
+                            <td>{{ $appointment->veterinarian }}</td>
+                            <td>{{ $appointment->concern }}</td>
+                            <td>{{ $appointment->user_status}}</td>
+                            <td>
+                                @if(in_array($appointment->user_status, ['accepted', 'rejected', 'canceled']))
+                                    <form id="deleteForm_{{ $appointment->id }}" action="{{ route('admin.delete_post', ['id' => $appointment->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="showConfirmation('delete', {{ $appointment->id }})" class="btn btn-danger">Delete</button>
+                                    </form>
+                                @else
+                                    <form id="acceptForm_{{ $appointment->id }}" action="{{ route('admin.accept_post') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                                        <button type="button" onclick="showConfirmation('accept', {{ $appointment->id }})" class="btn btn-success">Accept</button>
+                                    </form>
+                                    <form id="rejectForm_{{ $appointment->id }}" action="{{ route('admin.reject_post') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                                        <button type="button" onclick="showConfirmation('reject', {{ $appointment->id }})" class="btn btn-danger">Reject</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+    
 
-<!-- Confirmation Modal -->
 <!-- Confirmation Modal -->
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
@@ -456,7 +463,6 @@
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';
             methodInput.name = '_method';
-            methodInput.value = 'DELETE';
             form.appendChild(methodInput);
 
             var appointmentIdInput = document.createElement('input');
@@ -474,9 +480,6 @@
         };
     }
 </script>
-
-
-
 
 </body>
 </html>

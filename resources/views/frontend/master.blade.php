@@ -68,6 +68,34 @@
             text-align: justify;
             margin-bottom: 20px;
         }
+        #menu {
+        padding: 80px 0;
+        background-color: #ffffff; /* White background color */
+    }
+    #menu .section {
+        margin-bottom: 60px;
+        text-align: center;
+    }
+    #menu h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #333; /* Dark gray color for heading */
+    }
+    #menu .paragraph {
+        text-align: justify;
+        margin: 0 auto 30px; /* Centered and adds space below */
+        max-width: 800px; /* Limit width for better readability */
+        color: #666; /* Gray color for text */
+        line-height: 1.8; /* Increased line height for better spacing */
+    }
+    #menu img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px; /* Rounded corners for images */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Shadow effect for images */
+    }
+        
         @media (max-width: 668px) {
             .navbar-nav{
                 justify-content: center;
@@ -80,6 +108,7 @@
                 justify-content: center;
             }
         }
+        
     </style>
     
 </head>
@@ -93,53 +122,56 @@
 </section> 
 
 <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
-   
+    <div class="container">
 
-         <!-- MENU LINKS -->
-         
-              <ul class="nav navbar-nav navbar-right">
+        <!-- MENU LINKS -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
                 <a href="{{url('/dashboard')}}" class="navbar-brand">MojiVet</a>
-                   <li><a href="#home" class="smoothScroll">Home</a></li>
-                   <li><a href="#about" class="smoothScroll">About</a></li>
-                   <li><a href="#menu" class="smoothScroll">Photos</a></li>
-                   <li><a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a></li>
-                   <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
-    
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
-    
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-    
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-    
-                                <x-dropdown-link :href="route('logout')"
+                <li><a href="#home" class="smoothScroll">Home</a></li>
+                <li><a href="#about" class="smoothScroll">About</a></li>
+                <li><a href="#menu" class="smoothScroll">Photos</a></li>
+                <li><a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a></li>
+                <li>
+                    <div class="hidden sm:flex sm:items-center sm:ms-6">
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                    <div>{{ Auth::user()->name }}</div>
+
+                                    <div class="ms-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('profile.edit')">
+                                    {{ __('Profile') }}
+                                </x-dropdown-link>
+
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-dropdown-link :href="route('logout')"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
-              </ul>
-         </div>
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
     </div>
-    
 </section>
+
 
 <!-- HOME -->
 <section id="home" class="slider" data-stellar-background-ratio="0.5">
@@ -151,6 +183,17 @@
                         <div class="col-md-8 col-sm-12">
                             <h3>Welcome to MojiVet</h3>
                             <h1>Schedule your pet's next appointment effortlessly and embark on a journey of tailored veterinary excellence.</h1>
+                            <a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item item-second">
+                <div class="caption">
+                    <div class="container">
+                        <div class="col-md-8 col-sm-12">
+                            <h3>Take Care of your pets</h3>
+                            <h1>Vaccinations, proper nutrition, and regular dental check-ups contribute to a lifetime of good health for your beloved pets.</h1>
                             <a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a>
                         </div>
                     </div>
@@ -263,9 +306,9 @@
             </div>
             <div class="col-md-2 col-sm-4">
                 <ul class="wow fadeInUp social-icon" data-wow-delay="0.4s">
-                    <li><a href="#" class="fa fa-facebook-square" attr="facebook icon"></a></li>
+                    <li><a href="https://www.facebook.com/profile.php?id=61556967728958" class="fa fa-facebook-square" attr="facebook icon"></a></li>
                     <li><a href="#" class="fa fa-twitter"></a></li>
-                    <li><a href="#" class="fa fa-instagram"></a></li>
+                    <li><a href="https://www.instagram.com/moji.vet/" class="fa fa-instagram"></a></li>
                     <li><a href="#" class="fa fa-google"></a></li>
                 </ul>
                 <div class="wow fadeInUp copyright-text" data-wow-delay="0.8s">

@@ -108,9 +108,13 @@
                             @php
                                 $startHour = 8; // Start hour (e.g., 8 AM)
                                 $endHour = 17; // End hour (e.g., 5 PM)
+                                $existingAppointments = []; // Initialize array to store existing appointments
+                                $selectedDate = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d'); // Get selected date or default to today
+                                // Retrieve existing appointments for the selected date
+                                $existingAppointments = \App\Models\Appointment::whereDate('date', $selectedDate)->pluck('appointment_time')->toArray();
                             @endphp
                             @for ($hour = $startHour; $hour < $endHour; $hour++)
-                                @if ($hour !== 12) {{-- Skip 12 PM (lunch break) --}}
+                                @if ($hour !== 12 && !in_array(str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT) . ':00', $existingAppointments))
                                     @php
                                         $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
                                         $nextHourFormatted = str_pad(($hour + 1) % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format next hour
@@ -122,6 +126,7 @@
                             @endfor
                         </select>
                     </div>
+                    
                     
 
                     <div class="form-group">
