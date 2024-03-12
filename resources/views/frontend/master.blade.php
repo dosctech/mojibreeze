@@ -110,7 +110,7 @@
         }
         /* Navigation bar styles */
 .navbar {
-    background-color: #333;
+    background-color: #ffffff;
     padding: 15px 0;
     font-family: 'Arial', sans-serif;
 }
@@ -149,7 +149,7 @@
 }
 
 .dropdown-content a {
-    color: #333;
+    color: #cccccc;
     padding: 12px 16px;
     display: block;
     text-decoration: none;
@@ -195,13 +195,11 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ url('/dashboard') }}" class="navbar-brand">MojiVet</a></li>
-                <li><a href="#home" class="smoothScroll">Home</a></li>
-                <li><a href="#about" class="smoothScroll">About</a></li>
-                <li><a href="#menu" class="smoothScroll">Photos</a></li>
-                <li>
-                    <a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a>
-                </li>
-                <li>
+                <li class="nav-item"><a href="#home" class="nav-link smoothScroll">Home</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link smoothScroll">About</a></li>
+                <li class="nav-item"><a href="#menu" class="nav-link smoothScroll">Photos</a></li>
+                <li class="nav-item"><a href="{{ route('appointment') }}" class="nav-link section-btn btn btn-default smoothScroll">Get appointment</a></li>
+                <li class="nav-item">
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -238,7 +236,6 @@
 
     </div>
 </section>
-
 
 
 <!-- HOME -->
