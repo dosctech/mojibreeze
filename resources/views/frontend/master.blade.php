@@ -188,17 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div class="item item-second">
-                <div class="caption">
-                    <div class="container">
-                        <div class="col-md-8 col-sm-12">
-                            <h3>Take Care of your pets</h3>
-                            <h1>Vaccinations, proper nutrition, and regular dental check-ups contribute to a lifetime of good health for your beloved pets.</h1>
-                            <a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <div class="item item-third">
                 <div class="caption">
                     <div class="container">
