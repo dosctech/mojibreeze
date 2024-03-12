@@ -108,125 +108,7 @@
                 justify-content: center;
             }
         }
-        .custom-navbar {
-  color: #000000;
-  border: none;
-  margin-bottom: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-between; /* Updated to evenly distribute items */
-  align-items: center; /* Vertically center items */
-  margin-right: 50px;
-}
-
-.custom-navbar .navbar-nav {
-  display: flex;
-  list-style: none;
-}
-
-.custom-navbar .navbar-nav li {
-  margin-right: 40px;
-}
-
-.custom-navbar .navbar-nav li:last-child {
-  margin-right: 0;
-}
-
-.custom-navbar .navbar-brand {
-  color: #000000;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.custom-navbar .navbar-brand span {
-  color: #000000;
-}
-
-.custom-navbar .navbar-nav.navbar-nav-first {
-  margin-left: 8em;
-}
-
-.custom-navbar .navbar-nav.navbar-right li a {
-  padding-right: 12px;
-  padding-left: 12px;
-}
-
-.custom-navbar .navbar-nav.navbar-right .section-btn {
-  display: inline-block;
-  margin: 0.2em 0 0 1em;
-}
-
-.custom-navbar .navbar-nav.navbar-right .section-btn:hover {
-  background: #bfbfbf;
-  color: #000000;
-}
-
-.custom-navbar .navbar-nav.navbar-right .section-btn:focus {
-  color: #ffffff;
-}
-
-.custom-navbar .navbar-nav.navbar-right .section-btn a {
-  padding: 10px 25px;
-}
-
-.custom-navbar .nav .section-btn a:hover {
-  color: #ffffff;
-}
-
-.custom-navbar .nav li a {
-  font-size: 12px;
-  font-weight: bold;
-  color: #000000;
-  padding-right: 22px;
-  padding-left: 22px;
-  text-transform: uppercase;
-}
-
-.custom-navbar .nav li a:hover {
-  background: transparent;
-  color: #ce3232;
-}
-
-.custom-navbar .navbar-nav > li > a:hover,
-.custom-navbar .navbar-nav > li > a:focus {
-  background-color: transparent;
-}
-
-.custom-navbar .nav li.active > a {
-  background-color: transparent;
-  color: #ce3232;
-}
-
-.custom-navbar .navbar-toggle {
-  border: none;
-  padding-top: 10px;
-  background-color: transparent;
-}
-
-.custom-navbar .navbar-toggle .icon-bar {
-  background: #252525;
-  border-color: transparent;
-}
-
-@media (min-width: 768px) {
-  .custom-navbar {
-    border-bottom: 0;
-    background: 0 0;
-  }
-
-  .top-nav-collapse .navbar-brand {
-    color: #454545;
-  }
-
-  .top-nav-collapse .nav li a {
-    color: #575757;
-  }
-
-  .top-nav-collapse .nav .section-btn a {
-    color: #ffffff;
-  }
-}
-
+        
     </style>
     
 </head>
@@ -245,11 +127,13 @@
         <!-- MENU LINKS -->
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <a href="{{url('/dashboard')}}" class="navbar-brand">MojiVet</a>
+                <li><a href="{{ url('/dashboard') }}" class="navbar-brand">MojiVet</a></li>
                 <li><a href="#home" class="smoothScroll">Home</a></li>
                 <li><a href="#about" class="smoothScroll">About</a></li>
                 <li><a href="#menu" class="smoothScroll">Photos</a></li>
-                <li><a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a></li>
+                <li>
+                    <a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a>
+                </li>
                 <li>
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
@@ -274,9 +158,7 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
 
-                                    <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
+                                    <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                                         {{ __('Log Out') }}
                                     </x-dropdown-link>
                                 </form>
@@ -289,6 +171,7 @@
 
     </div>
 </section>
+
 
 
 <!-- HOME -->
