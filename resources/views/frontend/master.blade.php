@@ -108,74 +108,7 @@
                 justify-content: center;
             }
         }
-        /* Navigation bar styles */
-.navbar {
-    background-color: #ffffff;
-    padding: 15px 0;
-    font-family: 'Arial', sans-serif;
-}
-
-.navbar a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.navbar a:hover {
-    background-color: #555;
-}
-
-.navbar-brand {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-/* Dropdown styles */
-.dropdown-trigger button {
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: #cccccc;
-    padding: 12px 16px;
-    display: block;
-    text-decoration: none;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Responsive styles */
-@media screen and (max-width: 768px) {
-    .navbar-collapse {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .navbar-nav {
-        margin-top: 10px;
-    }
-
-    .navbar-nav a {
-        margin: 5px 0;
-    }
-}
-
+        
     </style>
     
 </head>
@@ -194,12 +127,12 @@
         <!-- MENU LINKS -->
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url('/dashboard') }}" class="navbar-brand">MojiVet</a></li>
-                <li class="nav-item"><a href="#home" class="nav-link smoothScroll">Home</a></li>
-                <li class="nav-item"><a href="#about" class="nav-link smoothScroll">About</a></li>
-                <li class="nav-item"><a href="#menu" class="nav-link smoothScroll">Photos</a></li>
-                <li class="nav-item"><a href="{{ route('appointment') }}" class="nav-link section-btn btn btn-default smoothScroll">Get appointment</a></li>
-                <li class="nav-item">
+                <a href="{{url('/dashboard')}}" class="navbar-brand">MojiVet</a>
+                <li><a href="#home" class="smoothScroll">Home</a></li>
+                <li><a href="#about" class="smoothScroll">About</a></li>
+                <li><a href="#menu" class="smoothScroll">Photos</a></li>
+                <li><a href="{{ route('appointment') }}" class="section-btn btn btn-default smoothScroll">Get appointment</a></li>
+                <li>
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -223,7 +156,9 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
 
-                                    <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    <x-dropdown-link :href="route('logout')"
+                                        onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
                                         {{ __('Log Out') }}
                                     </x-dropdown-link>
                                 </form>
