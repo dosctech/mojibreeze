@@ -35,6 +35,14 @@ class AppointmentController extends Controller
             'concern' => 'required|string',
         ]);
     
+
+        $existingAppointments = Appointment::whereDate('date', $validatedData['date'])
+        ->where('appointment_time', $validatedData['appointment_time'])
+        ->exists();
+
+    if ($existingAppointments) {
+        return redirect()->back()->with('error', 'The selected appointment time is already booked. Please choose another time.');
+    }
         // Associate the appointment with the authenticated user
         $validatedData['user_id'] = Auth::id();
     
@@ -86,7 +94,10 @@ class AppointmentController extends Controller
         Appointment::destroy($id);
         return redirect()->route('home')->with('success', 'Appointment deleted successfully.');
     }
-    
+    public function getAppointments($date) {
+        $existingAppointments = \App\Models\Appointment::whereDate('date', $date)->pluck('appointment_time')->toArray();
+        return response()->json(['appointments' => $existingAppointments]);
+    }
 }
 
 

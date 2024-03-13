@@ -4,8 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,3 +28,8 @@ Route::apiResource('appointments', ApiController::class);
 Route::prefix('v1')->group(function () {
     Route::apiResource('users', UserController::class);
 });
+
+Route::post('/login-retrofit', [AuthenticatedSessionController::class, 'loginRetrofit']);
+Route::post('/register-retrofit', [RegisteredUserController::class, 'registerRetrofit']);
+Route::post('/forgotpassword-retrofit', [PasswordResetLinkController::class, 'sendPasswordResetLink']);
+

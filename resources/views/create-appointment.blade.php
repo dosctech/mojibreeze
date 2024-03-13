@@ -99,7 +99,7 @@
 
                     <div class="form-group">
                         <label for="date" class="font-weight-bold">Date</label>
-                        <input type="date" name="date" id="date" class="form-control" required>
+                        <input type="date" name="date" id="date" class="form-control" required onchange="updateAppointmentTimes()">
                     </div>
                     <div class="form-group">
                         <label for="appointment_time" class="font-weight-bold">Time</label>
@@ -114,16 +114,17 @@
                                 $existingAppointments = \App\Models\Appointment::whereDate('date', $selectedDate)->pluck('appointment_time')->toArray();
                             @endphp
                             @for ($hour = $startHour; $hour < $endHour; $hour++)
-                                @if ($hour !== 12 && !in_array(str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT) . ':00', $existingAppointments))
-                                    @php
-                                        $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
+                            @if ($hour !== 12 && !in_array(str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT) . ':00', $existingAppointments))
+                                @php
+                                     $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
                                         $nextHourFormatted = str_pad(($hour + 1) % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format next hour
                                         $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
                                         $nextAmpm = ($hour + 1) < 12 ? 'AM' : 'PM'; // Determine AM/PM for the next hour
-                                    @endphp
-                                    <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }} - {{ $nextHourFormatted }}:00 {{ $nextAmpm }}</option>
-                                @endif
-                            @endfor
+                                @endphp
+                                <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }} - {{ $nextHourFormatted }}:00 {{ $nextAmpm }}</option>
+                            @endif
+                        @endfor
+                        
                         </select>
                     </div>
                     
@@ -208,5 +209,49 @@
                 openModal();
             }
         }
+          // Function to update appointment times based on the selected date
+function updateAppointmentTimes() {
+    var dateInput = document.getElementById('date');
+    var timeSelect = document.getElementById('appointment_time');
+    var selectedDate = dateInput.value;
+
+    // Fetch existing appointments for the selected date
+    fetch('/get-appointments/' + selectedDate)
+        .then(response => response.json())
+        .then(data => {
+            // Clear existing options
+            timeSelect.innerHTML = '<option value="">Select Time</option>';
+
+            // Populate available appointment times based on fetched data
+            var startHour = 8; // Start hour (e.g., 8 AM)
+            var endHour = 17; // End hour (e.g., 5 PM)
+            var existingAppointments = data.appointments;
+
+            for (var hour = startHour; hour < endHour; hour++) {
+                var formattedHour = hour.toString().padStart(2, '0');
+                var formattedNextHour = (hour + 1).toString().padStart(2, '0');
+                var timeSlot = formattedHour + ':00';
+                var nextTimeSlot = formattedNextHour + ':00';
+
+                // Check if time slot is available
+                if (!existingAppointments.includes(timeSlot)) {
+                    var ampm = hour < 12 ? 'AM' : 'PM';
+                    var optionText = formattedHour + ':00 ' + ampm + ' - ' + formattedNextHour + ':00 ' + ampm;
+                    var optionValue = timeSlot;
+                    timeSelect.innerHTML += '<option value="' + optionValue + '">' + optionText + '</option>';
+                }
+            }
+
+            // Disable the selected time slot in the dropdown
+            var selectedOption = timeSelect.querySelector('option[value="' + timeSelect.value + '"]');
+            if (selectedOption) {
+                selectedOption.disabled = true;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching appointments:', error);
+        });
+}
+
     </script>
 @endsection

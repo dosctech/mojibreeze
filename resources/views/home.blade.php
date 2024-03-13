@@ -94,12 +94,6 @@
                             </form>
                             <a href="{{ route('appointment.edit', $appointment) }}" class="btn btn-green">Edit Appointment</a>
                         @endif
-                    @elseif(in_array($appointment->user_status, ['canceled', 'accepted', 'rejected']))
-                        <form id="deleteForm_{{ $appointment->id }}" action="{{ route('appointment.destroy', $appointment->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
                     @endif
                 </div>
             </div>
