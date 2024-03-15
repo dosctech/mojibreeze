@@ -11,6 +11,20 @@
             height: 380px; /* Adjust height as needed */
             z-index: -1;
         }
+        .form-control { 
+    border-radius: 10px; /* Rounded corners */
+    padding: 8px 12px;  /* Add some internal spacing */
+    border: 1px solid #ccc; /* Subtle border */
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+} 
+.form-control:hover {
+     background-color: #f5f5f5; /* Light background change on hover */
+     cursor: pointer; /* Indicate that it's clickable */
+ }
+ .form-control:focus {
+    outline: none; /* Remove default dotted outline */
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* Stronger shadow on focus */
+}
     </style>
     <div class="container">
         <div class="row justify-content-center">
@@ -44,20 +58,30 @@
 
                             <div class="form-group">
                                 <label for="appointment_time" class="font-weight-bold">Time</label>
-                                <select name="appointment_time" id="appointment_time" class="form-control" value="{{ old('date', $appointment->time) }}"  required>
-                                    <option value="">Select Time</option>
-                                    @php
-                                        $startHour = 8; // Start hour (e.g., 8 AM)
-                                        $endHour = 17; // End hour (e.g., 5 PM)
-                                    @endphp
-                                    @for ($hour = $startHour; $hour <= $endHour; $hour++)
-                                        @php
-                                            $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
-                                            $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
-                                        @endphp
-                                        <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }}</option>
-                                    @endfor
-                                </select>
+                                <label for="appointment_time" class="font-weight-bold">Time</label>
+                        <select name="appointment_time" id="appointment_time" class="form-control" required>
+                            <option value="">Select Time</option>
+                            @php
+                                $startHour = 8; // Start hour (e.g., 8 AM)
+                                $endHour = 17; // End hour (e.g., 5 PM)
+                                $existingAppointments = []; // Initialize array to store existing appointments
+                                $selectedDate = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d'); // Get selected date or default to today
+                                // Retrieve existing appointments for the selected date
+                                $existingAppointments = \App\Models\Appointment::whereDate('date', $selectedDate)->pluck('appointment_time')->toArray();
+                            @endphp
+                            @for ($hour = $startHour; $hour < $endHour; $hour++)
+                            @if ($hour !== 12 && !in_array(str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT) . ':00', $existingAppointments))
+                                @php
+                                     $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
+                                        $nextHourFormatted = str_pad(($hour + 1) % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format next hour
+                                        $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
+                                        $nextAmpm = ($hour + 1) < 12 ? 'AM' : 'PM'; // Determine AM/PM for the next hour
+                                @endphp
+                                <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }} - {{ $nextHourFormatted }}:00 {{ $nextAmpm }}</option>
+                            @endif
+                        @endfor
+                        
+                        </select>
                             </div>
 
                             <div class="form-group">
@@ -71,6 +95,8 @@
                                     <option value="">Select Pet's Type</option>
                                     <option value="dog" {{ (old('pet_type', $appointment->pet_type) == 'dog') ? 'selected' : '' }}>Dog</option>
                                     <option value="cat" {{ (old('pet_type', $appointment->pet_type) == 'cat') ? 'selected' : '' }}>Cat</option>
+                                    <option value="Rabbit" {{ (old('pet_type', $appointment->pet_type) == 'Rabbit') ? 'selected' : '' }}>Rabbit</option>
+                                    <option value="Rabbit" {{ (old('pet_type', $appointment->pet_type) == 'Bird') ? 'selected' : '' }}>Bird</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>
@@ -81,7 +107,6 @@
                                     <option value="">Select Veterinarian</option>
                                     <option value="Dr. Tiger look (Veterinary)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Tiger look') ? 'selected' : '' }}>Dr. Tiger look (Veterinary)</option>
                                     <option value="Dr. Banana (Groomer)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Banana') ? 'selected' : '' }}>Dr. Banana (Groomer)</option>
-                                    <option value=">Dr. Dadz(Boldstar)" {{ (old('veterinarian', $appointment->veterinarian) == 'Dr. Dadz') ? 'selected' : '' }}>Dr. Dadz(Boldstar)</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>
@@ -90,7 +115,14 @@
                                 <label for="concern" class="font-weight-bold">Appointment Concern</label>
                                 <textarea name="concern" id="concern" class="form-control" required>{{ old('concern', $appointment->concern) }}</textarea>
                             </div>
-
+                            <div class="form-group">
+                                <label for="user_status" class="font-weight-bold">User Status</label>
+                                <select name="user_status" id="user_status" class="form-control" required>
+                                    <option value="pending" {{ (old('user_status', $appointment->user_status ?? 'pending') == 'pending') ? 'selected' : '' }}>pending</option>
+                                    <!-- Add other status options as needed -->
+                                </select>
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary btn-block">Update Appointment</button>
                         </form>
                     </div>

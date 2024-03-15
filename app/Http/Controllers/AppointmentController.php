@@ -33,17 +33,18 @@ class AppointmentController extends Controller
             'pet_type' => 'required|string',
             'veterinarian' => 'required|string',
             'concern' => 'required|string',
+
         ]);
-    
+        
 
         $existingAppointments = Appointment::whereDate('date', $validatedData['date'])
         ->where('appointment_time', $validatedData['appointment_time'])
         ->exists();
 
-    if ($existingAppointments) {
-        return redirect()->back()->with('error', 'The selected appointment time is already booked. Please choose another time.');
-    }
-        // Associate the appointment with the authenticated user
+        if ($existingAppointments) {
+            return redirect()->back()->with('error', 'The selected appointment time is already booked. Please choose another time.');
+        }
+            // Associate the appointment with the authenticated user
         $validatedData['user_id'] = Auth::id();
     
         // Create a new appointment
@@ -71,14 +72,35 @@ class AppointmentController extends Controller
         $appointment = Appointment::find($id);
         return view('edit-appointment', compact('appointment')); // Assuming a view for editing
     }
-
     public function update(Request $request, $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'date' => 'required|date',
+            'appointment_time' => 'required',
+            'pet_name' => 'required|string',
+            'pet_type' => 'required|string',
+            'veterinarian' => 'required|string',
+            'concern' => 'required|string',
+            'user_status' => 'required|in:pending,accepted,rejected,canceled',
+        ]);
+
+        $appointment->update($request->all());
+
+        return redirect()->route('appointments.index')->with('success', 'Appointment updated successfully.');
+    }
+
+    public function updateCancel(Request $request, $id)
     {
         $appointment = Appointment::findOrFail($id);
         
         // Validate the request
         $request->validate([
-            'user_status' => 'required|in:accepted,rejected,canceled', // Only accept these values
+            
+            'user_status' => 'required|in:pending,accepted,rejected,canceled', // Only accept these values
         ]);
 
         // Update the user status
@@ -86,9 +108,8 @@ class AppointmentController extends Controller
             'user_status' => $request->user_status,
         ]);
 
-        return redirect()->back()->with('status', 'Appointment status updated successfully.');
+        return redirect()->route('appointments.index')->with('success', 'Appointment updated successfully.');
     }
-
     public function destroy($id)
     {
         Appointment::destroy($id);
@@ -98,6 +119,7 @@ class AppointmentController extends Controller
         $existingAppointments = \App\Models\Appointment::whereDate('date', $date)->pluck('appointment_time')->toArray();
         return response()->json(['appointments' => $existingAppointments]);
     }
+    
 }
 
 

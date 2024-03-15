@@ -71,10 +71,12 @@
                         <p><b>Time:</b>
                             @php
                                 $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
-                                $formattedStartTime = $appointmentTime->format('h:i A');
+                                $formattedStartTime = $appointmentTime->format('h:i A'); // Use 'A' for uppercase AM/PM
                                 $formattedEndTime = $appointmentTime->copy()->addHour()->format('h:i A');
                             @endphp
-                            {{ $formattedStartTime }} - {{ $formattedEndTime }}</p>
+                            {{ $formattedStartTime }} - {{ $formattedEndTime }} 
+                        </p>
+                        
                         
                         <p><b>Pet's Name:</b> {{ $appointment->pet_name }} </p>
                         <p><b> Pet's Type:</b> {{ $appointment->pet_type }} </p>
@@ -86,15 +88,16 @@
                 <div class="card-footer d-flex justify-content-between align-items-center">
                     @if($appointment->user_status == 'pending')
                         @if($appointment->user_type !== 'canceled')
-                            <form action="{{ route('appointment.update', $appointment->id) }}" method="POST" id="cancelForm">
+                            <button type="button" class="btn btn-gray" onclick="confirmCancellation('cancelForm{{$appointment->id}}')">Cancel</button>
+                            <form action="{{ route('appointments.updateCancel', $appointment->id) }}" method="POST" id="cancelForm{{$appointment->id}}">
                                 @csrf
-                                @method('PUT')
+                                @method('PUT') <!-- Ensure the method is set to PUT -->
                                 <input type="hidden" name="user_status" value="canceled">
-                                <button type="button" class="btn btn-gray" id="cancelBtn" onclick="confirmCancellation()">Cancel</button>
                             </form>
                             <a href="{{ route('appointment.edit', $appointment) }}" class="btn btn-green">Edit Appointment</a>
                         @endif
                     @endif
+
                 </div>
             </div>
         </div>
@@ -128,12 +131,12 @@
 </div>
 
 <script>
-    function confirmCancellation() {
+    function confirmCancellation(formId) {
         $('#confirmationModal').modal('show');
 
         // When user confirms, submit the form
         $('#confirmCancelBtn').on('click', function () {
-            $('#cancelForm').submit();
+            $('#' + formId).submit(); // Submit the form with the specified ID
         });
 
         // When user cancels
@@ -141,14 +144,7 @@
             console.log('Canceled');
         });
     }
-
-    // Check if success message is present and show it
-    $(document).ready(function() {
-        var appointmentAdded = '{{ Session::get('appointment_added') }}';
-        if (appointmentAdded) {
-            alert("Appointment successfully added!"); // You can replace this with your preferred way of displaying the message
-        }
-    });
+    
 </script>
 
 @endsection
