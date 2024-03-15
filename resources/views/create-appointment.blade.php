@@ -57,21 +57,6 @@
         .is-valid {
             border-color: green !important;
         }
-        .form-control { 
-    border-radius: 10px; /* Rounded corners */
-    padding: 8px 12px;  /* Add some internal spacing */
-    border: 1px solid #ccc; /* Subtle border */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-} 
-.form-control:hover {
-     background-color: #f5f5f5; /* Light background change on hover */
-     cursor: pointer; /* Indicate that it's clickable */
- }
-.form-control:focus {
-    outline: none; /* Remove default dotted outline */
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* Stronger shadow on focus */
-}
-
     </style>
 
     <!-- Confirmation Modal -->
@@ -119,19 +104,27 @@
                     <div class="form-group">
                         <label for="appointment_time" class="font-weight-bold">Time</label>
                         <select name="appointment_time" id="appointment_time" class="form-control" required>
-                            <option value="">Select Time </option>
+                            <option value="">Select Time</option>
                             @php
                                 $startHour = 8; // Start hour (e.g., 8 AM)
                                 $endHour = 17; // End hour (e.g., 5 PM)
-                    
-                                // Fetching existing appointments (adjust if needed)
-                                $selectedDate = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d'); 
-                                $existingAppointments = \App\Models\Appointment::whereDate('date', $selectedDate)
-                                                                               ->pluck('appointment_time')
-                                                                               ->toArray(); 
+                                $existingAppointments = []; // Initialize array to store existing appointments
+                                $selectedDate = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d'); // Get selected date or default to today
+                                // Retrieve existing appointments for the selected date
+                                $existingAppointments = \App\Models\Appointment::whereDate('date', $selectedDate)->pluck('appointment_time')->toArray();
                             @endphp
-                    
-                            {{-- Populate options dynamically (explained below) --}}
+                            @for ($hour = $startHour; $hour < $endHour; $hour++)
+                            @if ($hour !== 12 && !in_array(str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT) . ':00', $existingAppointments))
+                                @php
+                                     $hourFormatted = str_pad($hour % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format hour (e.g., 08)
+                                        $nextHourFormatted = str_pad(($hour + 1) % 12 ?: 12, 2, '0', STR_PAD_LEFT); // Format next hour
+                                        $ampm = $hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
+                                        $nextAmpm = ($hour + 1) < 12 ? 'AM' : 'PM'; // Determine AM/PM for the next hour
+                                @endphp
+                                <option value="{{ $hourFormatted }}:00">{{ $hourFormatted }}:00 {{ $ampm }} - {{ $nextHourFormatted }}:00 {{ $nextAmpm }}</option>
+                            @endif
+                        @endfor
+                        
                         </select>
                     </div>
                     
@@ -149,8 +142,6 @@
                             <option value="dog">Dog</option>
                             <option value="cat">Cat</option>
                             <!-- Add more options as needed -->
-                            <option value="cat">Rabbit</option>
-                            <option value="cat">Bird</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -159,7 +150,7 @@
                             <option value="">Select Veterinarian</option>
                             <option value="Dr. Tiger Look - Veterinary">Dr. Tiger Look - Veterinary</option>
                             <option value="Dr. Banana - Groomer">Dr. Banana - Groomer </option>
-                            
+                            <option value="Dr. Dadz - Boldstar">Dr. Dadz - Boldstar</option>
                             <!-- Add more options as needed -->
                         </select>
                     </div>
@@ -168,7 +159,7 @@
                         <label for="concern" class="font-weight-bold">Appointment Concern</label>
                         <textarea name="concern" id="concern" class="form-control" required></textarea>
                     </div>
-                   
+                    
 
                     <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Create Appointment</button>
                 </form>
@@ -179,39 +170,7 @@
     <div class="picture">
         <img src="images/create.png" style="width: 700px; height: 400px;">
     </div>
-    <script>
-        const timeSelect = document.getElementById('appointment_time');
-        const selectedDate = '{{$selectedDate}}'; // Pass selected date from PHP
-        const existingAppointments = @json($existingAppointments);
-        const startHour = {{$startHour}};
-        const endHour = {{$endHour}};
-    
-        function generateTimeOptions() {
-            timeSelect.innerHTML = '<option value="">Select Time</option>'; // Reset options
-    
-            for (let hour = startHour; hour < endHour; hour++) {
-                const timeSlot = str_pad(hour % 12 || 12, 2, '0', STR_PAD_LEFT) + ':00';
-    
-                if (hour !== 12 && !existingAppointments.includes(timeSlot)) {
-                    const hourFormatted = str_pad(hour % 12 || 12, 2, '0', STR_PAD_LEFT);
-                    const nextHourFormatted = str_pad((hour + 1) % 12 || 12, 2, '0', STR_PAD_LEFT); 
-                    const ampm = hour < 12 ? 'AM' : 'PM'; 
-                    const nextAmpm = (hour + 1) < 12 ? 'AM' : 'PM';
-    
-                    const option = document.createElement('option');
-                    option.value = timeSlot;
-                    option.text = `${hourFormatted}:00 ${ampm} - ${nextHourFormatted}:00 ${nextAmpm}`;
-                    timeSelect.add(option);
-                }
-            }
-        }
-    
-        // Call Initially 
-        generateTimeOptions();
-    
-        // Optional: If you have a date selection input, add an event listener to update options 
-        //           when the date changes.
-    </script>
+
     <script>
         // Function to open the modal
         function openModal() {
@@ -250,7 +209,8 @@
                 openModal();
             }
         }
-        function updateAppointmentTimes() {
+          // Function to update appointment times based on the selected date
+function updateAppointmentTimes() {
     var dateInput = document.getElementById('date');
     var timeSelect = document.getElementById('appointment_time');
     var selectedDate = dateInput.value;
@@ -259,7 +219,7 @@
     fetch('/get-appointments/' + selectedDate)
         .then(response => response.json())
         .then(data => {
-            // Clear existing options except the "Select Time" option
+            // Clear existing options
             timeSelect.innerHTML = '<option value="">Select Time</option>';
 
             // Populate available appointment times based on fetched data
@@ -268,24 +228,17 @@
             var existingAppointments = data.appointments;
 
             for (var hour = startHour; hour < endHour; hour++) {
-                if (hour !== 12) { // Skip 12:00 PM
-                    var hourFormatted = (hour % 12 || 12).toString().padStart(2, '0'); // Format hour (e.g., 08)
-                    var nextHourFormatted = ((hour + 1) % 12 || 12).toString().padStart(2, '0'); // Format next hour
-                    var ampm = hour < 12 ? 'AM' : 'PM'; // Determine AM/PM
-                    var nextAmpm = (hour + 1) < 12 ? 'AM' : 'PM'; // Determine AM/PM for the next hour
+                var formattedHour = hour.toString().padStart(2, '0');
+                var formattedNextHour = (hour + 1).toString().padStart(2, '0');
+                var timeSlot = formattedHour + ':00';
+                var nextTimeSlot = formattedNextHour + ':00';
 
-                    var timeSlot = hourFormatted + ':00';
-                    var nextTimeSlot = nextHourFormatted + ':00';
-
-                    // Check if time slot is available
-                    if (!existingAppointments.includes(timeSlot)) {
-                        var optionText = hourFormatted + ':00 ' + ampm + ' - ' + nextHourFormatted + ':00 ' + nextAmpm;
-                        var optionValue = hourFormatted + ':00:00'; // Adjusted time format
-                        var option = document.createElement('option');
-                        option.value = optionValue;
-                        option.textContent = optionText;
-                        timeSelect.appendChild(option);
-                    }
+                // Check if time slot is available
+                if (!existingAppointments.includes(timeSlot)) {
+                    var ampm = hour < 12 ? 'AM' : 'PM';
+                    var optionText = formattedHour + ':00 ' + ampm + ' - ' + formattedNextHour + ':00 ' + ampm;
+                    var optionValue = timeSlot;
+                    timeSelect.innerHTML += '<option value="' + optionValue + '">' + optionText + '</option>';
                 }
             }
 
