@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,27 +45,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
-    }
-    
-    public function loginRetrofit(LoginRequest $request)
-    {
-        // 1. Find the user by email
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && Auth::attempt($request->only('email', 'password'))) {
-            // 2. Successful authentication 
-            $token = $user->createToken('authToken')->plainTextToken;
-            return response()->json([
-                'message' => 'Login successful',
-                'token' => $token,
-                'email' => $user->email,
-                'userId' => $user->id,
-            ], 200);
-        } else {
-            // Invalid credentials (or user not found)
-            return response()->json([
-                'error' => 'Invalid credentials'
-            ], 401);
-        }
     }
 }
