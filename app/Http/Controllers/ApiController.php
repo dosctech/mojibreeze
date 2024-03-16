@@ -33,7 +33,7 @@ class ApiController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'date' => 'required|date',
-            'appointment_time' => 'required|date_format:H:i',
+            'appointment_time' => 'required|date_format:h:i a',
             'pet_name' => 'required|string|max:255',
             'pet_type' => 'required|string|max:255',
             'concern' => 'required|string',

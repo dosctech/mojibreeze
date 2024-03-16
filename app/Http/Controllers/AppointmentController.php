@@ -80,18 +80,28 @@ class AppointmentController extends Controller
             'name' => 'required|string',
             'email' => 'required|email',
             'date' => 'required|date',
-            'appointment_time' => 'required',
+            'appointment_time' => 'required', // Ensuring appointment time is selected
             'pet_name' => 'required|string',
             'pet_type' => 'required|string',
             'veterinarian' => 'required|string',
             'concern' => 'required|string',
             'user_status' => 'required|in:pending,accepted,rejected,canceled',
         ]);
-
+    
+        // Check if the selected appointment time is already booked
+        $existingAppointment = Appointment::where('date', $request->date)
+                                            ->where('appointment_time', $request->appointment_time)
+                                            ->where('id', '!=', $id) // Exclude the current appointment being updated
+                                            ->exists();
+        if ($existingAppointment) {
+            return redirect()->back()->with('error', 'This appointment time is already booked. Please select a different time.');
+        }
+    
         $appointment->update($request->all());
-
+    
         return redirect()->route('appointments.index')->with('success', 'Appointment updated successfully.');
     }
+    
 
     public function updateCancel(Request $request, $id)
     {

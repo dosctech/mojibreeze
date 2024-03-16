@@ -68,15 +68,18 @@
                         <h5 class="card-title"><b>{{ $appointment->name }}</b></h5>
                         <p class="card-text"><b>Email:</b> {{ $appointment->email }} </p>
                         <p><b>Date:</b> {{ $appointment->date }} </p>
-                        <p><b>Time:</b>
+                        <p>
+                            <b>Time:</b> 
                             @php
-                                $appointmentTime = \Carbon\Carbon::createFromFormat('H:i:s', $appointment->appointment_time);
-                                $formattedStartTime = $appointmentTime->format('h:i A'); // Use 'A' for uppercase AM/PM
-                                $formattedEndTime = $appointmentTime->copy()->addHour()->format('h:i A');
+                                // Split the appointment time string into hours and minutes
+                                list($hours, $minutes) = explode(':', $appointment->appointment_time);
+                                // Format the hours and minutes
+                                $formattedStartTime = date('h:i A', mktime($hours, $minutes));
+                                // Calculate end time by adding an hour to the start time
+                                $formattedEndTime = date('h:i A', mktime($hours + 1, $minutes));
                             @endphp
-                            {{ $formattedStartTime }} - {{ $formattedEndTime }} 
+                            {{ $formattedStartTime }} - {{ $formattedEndTime }}
                         </p>
-                        
                         
                         <p><b>Pet's Name:</b> {{ $appointment->pet_name }} </p>
                         <p><b> Pet's Type:</b> {{ $appointment->pet_type }} </p>
