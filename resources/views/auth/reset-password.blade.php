@@ -1,4 +1,13 @@
 <x-guest-layout>
+    <style>
+        body {
+            background-image: url('/images/bgfront.png'); /* Adjusted path to the background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            overflow: hidden; /* Hide the scrollbar */
+        }
+    </style>
+
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
